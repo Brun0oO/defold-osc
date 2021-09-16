@@ -18,7 +18,7 @@ You can use OSC in your own project by adding this project as a [Defold Library 
 
 	https://github.com/Brun0oO/defold-osc/archive/master.zip
 
-Or point to the ZIP file of a [specific OSC release](https://github.com/Brun0oO/defold-osc/release).
+Or point to the ZIP file of a [specific OSC release](https://github.com/Brun0oO/defold-osc/releases).
 
 
 ## Basic usage
