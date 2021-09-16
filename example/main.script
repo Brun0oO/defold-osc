@@ -1,0 +1,58 @@
+local osc = require('osc.init')
+local plugin = require('osc.plugins.udp-socket-non-blocking')
+
+
+
+local function print_data(data)
+	local msg = data.message
+	print('Received OscMessage  => address: ' .. msg.address, 'timestamp: ' .. data.timestamp)
+	if #msg ~=0 then
+		for index, argument in ipairs(msg) do
+			print('  arg index: ' .. index, 'value: ' .. argument)
+		end
+	else
+		print('  no arg provided')
+	end
+end
+
+function init(self)
+	local udp = plugin.new {
+		recvAddr = 'localhost',
+		recvPort = 9000,
+		ignore_late = true, -- ignore late bundles
+	}
+	self.osc = osc.new {plugin = udp}
+
+
+
+	local _self = self
+	self.osc:add_handler('/test', function(data)
+		test(_self, data)
+	end)
+	self.osc:add_handler('/param/{x,y,z}', function(data)
+		param(_self, data)
+	end)
+
+
+	host, port, error = self.osc:open()
+	if error ~= nil then
+		print("Failed to start OSC server, error: " .. error)
+	else
+		print("UDP OSC server started on address "..host.." (port:"..port..")")
+	end
+end
+
+function update(self, dt)
+	self.osc:update() -- This call is very important to handle socket reading !!!
+end
+
+function test(self, data)
+	print_data(data)
+end
+
+function param(self, data)
+	print_data(data)
+end
+
+
+
